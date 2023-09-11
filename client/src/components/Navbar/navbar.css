@@ -1,0 +1,37 @@
+.navCont {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 2rem;
+  background-color: #001c30;
+  border-bottom: 3px solid turquoise;
+}
+.linkCont {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  align-items: center;
+}
+.icon {
+  fill: turquoise;
+}
+.create {
+  color: white;
+  border: 3px solid darkcyan;
+  padding: 10px;
+  border-radius: 50px;
+}
+
+.linkCont a {
+  color: white;
+  border: 3px solid darkcyan;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+}
+.linkCont a:hover {
+  border: 3px solid turquoise;
+  background-color: black;
+  color: white;
+  border-radius: 0px;
+  transition: all 0.3s ease-in-out;
+}

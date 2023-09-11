@@ -1,0 +1,35 @@
+.wholeCont {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.singleCont {
+  padding: 30px;
+  background: #64ccc5;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+.blogTitle {
+  text-align: center;
+  font-size: 45px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.blogImg {
+  width: 80%;
+  border-radius: 25px;
+}
+.blogDetail {
+  color: rgb(0, 0, 0);
+  background: none;
+  line-height: 20px;
+}
+.blogCreatedDate {
+  color: darkgray;
+  font-size: 12px;
+}
