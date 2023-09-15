@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
+
+.NotFoundCont {
+  font-family: "Merriweather", serif;
+  height: 98vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.NotFoundCont > h2 {
+  font-size: 40px;
+}
+.notfoundImg {
+  width: 400px;
+}

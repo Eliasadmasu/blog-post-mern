@@ -4,11 +4,13 @@ import "dotenv/config";
 const app = express();
 import { connectToDatabase } from "./config/db.js";
 import { router } from "./routes/blogRoutes.js";
+import cookieParser from "cookie-parser";
 
 const corsOptions = {
   origin: "http://localhost:3000",
 };
 app.use(cors(corsOptions));
+app.use(cookieParser());
 
 app.use(express.json());
 

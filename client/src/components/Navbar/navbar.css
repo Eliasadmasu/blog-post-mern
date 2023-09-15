@@ -14,13 +14,28 @@
 .icon {
   fill: turquoise;
 }
-.create {
-  color: white;
-  border: 3px solid darkcyan;
-  padding: 10px;
-  border-radius: 50px;
+.searchCont {
+  position: relative;
+  width: 400px;
+  height: 20px;
 }
-
+.searchBar {
+  position: absolute;
+  width: 88%;
+  height: 100%;
+  border-radius: 30px;
+  padding: 10px 30px;
+  border: none;
+}
+.searchBar:focus {
+  outline: thick double turquoise;
+}
+.searchIcon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  fill: turquoise;
+}
 .linkCont a {
   color: white;
   border: 3px solid darkcyan;

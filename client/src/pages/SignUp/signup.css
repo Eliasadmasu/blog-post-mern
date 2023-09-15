@@ -1,0 +1,52 @@
+.signUpCont {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+.FormCnt {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  background-color: turquoise;
+  border-radius: 50px;
+  width: 50%;
+  padding: 10px;
+  gap: 30px;
+}
+.inputLbl > label {
+  align-self: start;
+  padding: 10px;
+}
+.inputLbl {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.inputLbl > input {
+  width: 90%;
+  height: 30px;
+  border-radius: 50px;
+  border: none;
+  padding: 10px 20px;
+}
+.inputLbl > input:focus {
+  outline: 1px solid #001c30;
+}
+.btnCA {
+  width: 150px;
+  padding: 10px;
+  border-radius: 20px;
+  border: thick double #32a1ce;
+  background-color: #001c30;
+  color: white;
+  cursor: pointer;
+}
+.btnCA:hover {
+  border: 5px dashed #32a1ce;
+}
