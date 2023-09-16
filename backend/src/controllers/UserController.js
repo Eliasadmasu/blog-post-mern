@@ -46,12 +46,12 @@ const login = async (req, res) => {
         { userId: user._id },
         process.env.REFRESH_SECRET,
         {
-          expiresIn: "7d",
+          expiresIn: "10m",
         }
       );
 
       const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
-        expiresIn: "1h",
+        expiresIn: "1m",
       });
 
       res.cookie("refreshToken", refreshToken, {
@@ -59,7 +59,7 @@ const login = async (req, res) => {
         secure: true,
       });
 
-      res.status(200).json({ token, user });
+      res.status(200).json({ token, refreshToken, user });
     }
   } catch (err) {
     console.error("Error during login:", err);
@@ -84,7 +84,7 @@ const refreshToken = async (req, res) => {
 
     // Generate a new access token
     const token = jwt.sign({ userId }, process.env.SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1m",
     });
 
     // Send the new access token to the client

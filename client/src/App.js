@@ -13,26 +13,18 @@ import { Route, Routes, Navigate } from "react-router-dom";
 function App() {
   const { user } = useUserContext();
 
-  const checkToken = () => {
-    if (!user) {
-      return <Navigate to={"/login"} />;
-    }
-  };
-
-  useEffect(() => {
-    checkToken();
-  }, [user]);
-
   return (
     <div className="App">
       <Navbar />
       <Routes>
         <Route path="/" element={<AllBlogs />} />
         {user ? (
-          <>
-            <Route path="/create" element={<Create />} />
-            <Route path="/edit/:postId" element={<EditBlogPost />} />
-          </>
+          <Route path="/create" element={<Create />} />
+        ) : (
+          <Route path="/create" element={<Navigate to="/login" />} />
+        )}
+        {user ? (
+          <Route path="/edit/:postId" element={<EditBlogPost />} />
         ) : (
           <Route path="/create" element={<Navigate to="/login" />} />
         )}

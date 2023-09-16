@@ -29,6 +29,6 @@ router.put("/update/:id", upload.single("photo"), verifyToken, updatePost);
 
 router.get("/get/:id", verifyToken, getBlogPostById);
 
-router.get("/refresh-token", refreshToken);
+router.post("/refresh-token", refreshToken);
 
 export { router };

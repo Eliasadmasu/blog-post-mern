@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useUserContext } from "../../context/UserContext";
+import api from "./axiosConfig";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -24,26 +25,34 @@ const Login = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const onCreateAcoount = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${apiUrl}/blog/login`, formData);
+      const response = await api.post(`/blog/login`, formData);
       // Successful registration
       console.log("Login successful:", response);
       if (response.status === 200) {
         setError("");
         navigate("/");
-        const { token } = response.data;
+        const { token, refreshToken } = response.data;
         const { username } = response.data.user;
         Cookies.set(
           "authToken",
           token,
-          { expires: 1 },
+          { expires: 1 / (24 * 60) },
           { secure: true },
           { httpOnly: true }
         );
-        Cookies.set("username", username, { expires: 1 });
+        Cookies.set(
+          "refreshToken",
+          refreshToken,
+          { expires: 7 },
+          { secure: true },
+          { httpOnly: true }
+        );
+
+        Cookies.set("username", username, { expires: 1 / (24 * 60) });
         setUser(token);
         setUsername(username);
       }
@@ -61,7 +70,7 @@ const Login = () => {
 
   return (
     <div className="signUpCont">
-      <form className="FormCnt" onSubmit={onCreateAcoount}>
+      <form className="FormCnt" onSubmit={handleLogin}>
         <h2> Login</h2>
         {error && <div className="error-message">{error}</div>}
         <div className="inputLbl">

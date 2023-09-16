@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const UserContext = createContext();
 
@@ -13,8 +13,16 @@ export const UserContextProvider = ({ children }) => {
 
   const [user, setUser] = useState(initialUser);
   const [username, setUsername] = useState(initialUsername);
+
+  // Function to update user state
+  const updateUser = (newUser, newUsername) => {
+    setUser(newUser);
+    setUsername(newUsername);
+  };
   return (
-    <UserContext.Provider value={{ user, setUser, username, setUsername }}>
+    <UserContext.Provider
+      value={{ user, setUser, username, setUsername, updateUser }}
+    >
       {children}
     </UserContext.Provider>
   );
