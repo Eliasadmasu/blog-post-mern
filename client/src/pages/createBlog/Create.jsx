@@ -5,6 +5,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
+import Cookies from "js-cookie";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 const Create = () => {
@@ -12,7 +13,7 @@ const Create = () => {
   const [content, setContent] = useState("");
   const [photo, setPhoto] = useState(null);
   const navigate = useNavigate();
-  const { user } = useUserContext();
+  const { user, setUser, refreshToken } = useUserContext();
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -33,7 +34,29 @@ const Create = () => {
           Authorization: `Bearer ${user}`,
         },
       });
-      navigate("/");
+      if (response.status === 200) {
+        navigate("/");
+      } else if (response.status === 401) {
+        const refreshResponse = await axios.post("/api/refresh", {
+          refreshToken,
+        });
+
+        if (refreshResponse.status === 200) {
+          const newData = refreshResponse.data;
+          setUser(newData.accessToken);
+          Cookies.set("authToken", newData.accessToken, {
+            expires: 1 / (24 * 60), // Expiration time in days
+            secure: true, // Enable this for HTTPS
+            httpOnly: true, // Restrict access to JavaScript
+          });
+
+          console.log(newData.message);
+        } else {
+          console.error("Refresh failed");
+        }
+      } else {
+        console.error("Protected route error");
+      }
       console.log(response);
     } catch (err) {
       console.error(err);

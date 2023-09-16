@@ -41,22 +41,23 @@ const login = async (req, res) => {
       if (!isPasswordValid) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
-
+      //TODO access token ==token
+      const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
+        expiresIn: "10m",
+      });
+      //TODO refreshtoken generating
       const refreshToken = jwt.sign(
         { userId: user._id },
         process.env.REFRESH_SECRET,
         {
-          expiresIn: "10m",
+          expiresIn: "1d", //!changed time
         }
       );
-
-      const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
-        expiresIn: "1m",
-      });
-
+      //TODO pass the refreshtoken to the cookie
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
+        maxAge: 1 * 24 * 60 * 60 * 1000,
       });
 
       res.status(200).json({ token, refreshToken, user });
@@ -67,29 +68,31 @@ const login = async (req, res) => {
   }
 };
 
-const refreshToken = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
+//! test refresh token
+//! test refresh token
+//! test refresh token
+const newRefreshTokenTest = (req, res) => {
+  const cookies = req.cookies;
+  console.log(cookies);
 
-  console.log({ refreshToken });
-  if (!refreshToken) {
-    return res.status(401).json({ message: "Refresh token missing" });
-  }
+  if (!cookies?.refreshToken)
+    return res.status(401).json({ message: "Unauthorized" });
 
-  jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: "Invalid refresh token" });
-    }
+  const refreshToken = cookies.refreshToken;
+  console.log(refreshToken);
 
-    const userId = decoded.userId;
+  jwt.verify(refreshToken, process.env.REFRESH_SECRET, async (err, decoded) => {
+    if (err) return res.status(403).json({ message: "Forbidden" });
 
-    // Generate a new access token
-    const token = jwt.sign({ userId }, process.env.SECRET, {
+    const foundUser = await UserModel.findOne({ username: decoded.username });
+
+    if (!foundUser) return res.status(401).json({ message: "Unauthorized" });
+
+    const accessToken = jwt.sign({ userId }, process.env.SECRET, {
       expiresIn: "1m",
     });
-
-    // Send the new access token to the client
-    res.status(200).json({ token });
+    res.json({ accessToken, message: "Access token refreshed" });
   });
 };
 
-export { register, login, refreshToken };
+export { register, login, newRefreshTokenTest };

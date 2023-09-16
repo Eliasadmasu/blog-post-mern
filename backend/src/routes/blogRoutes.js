@@ -3,13 +3,12 @@ import {
   createBlog,
   getAllBlog,
   getBlogPostById,
-  granted,
   updatePost,
 } from "../controllers/blogController.js";
 import upload from "../middleware/multerConfig.js";
 import {
   login,
-  refreshToken,
+  newRefreshTokenTest,
   register,
 } from "../controllers/userController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
@@ -29,6 +28,9 @@ router.put("/update/:id", upload.single("photo"), verifyToken, updatePost);
 
 router.get("/get/:id", verifyToken, getBlogPostById);
 
-router.post("/refresh-token", refreshToken);
+//!test
+//!test
+//!test
+router.post("/refresh", newRefreshTokenTest);
 
 export { router };

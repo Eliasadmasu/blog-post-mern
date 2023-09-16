@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   // Usercontext
-  const { setUser, setUsername } = useUserContext();
+  const { setUser, setUsername, setRefreshToken } = useUserContext();
   // Usercontext
 
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -37,20 +37,18 @@ const Login = () => {
         navigate("/");
         const { token, refreshToken } = response.data;
         const { username } = response.data.user;
-        Cookies.set(
-          "authToken",
-          token,
-          { expires: 1 / (24 * 60) },
-          { secure: true },
-          { httpOnly: true }
-        );
-        Cookies.set(
-          "refreshToken",
-          refreshToken,
-          { expires: 7 },
-          { secure: true },
-          { httpOnly: true }
-        );
+        setRefreshToken(refreshToken);
+        console.log({ refreshToken });
+        Cookies.set("authToken", token, {
+          expires: 1 / (24 * 60), // Expiration time in days
+          secure: true, // Enable this for HTTPS
+          httpOnly: true, // Restrict access to JavaScript
+        });
+        Cookies.set("refreshToken", refreshToken, {
+          expires: 1, // Expiration time in days
+          secure: true, // Enable this for HTTPS
+          httpOnly: true, // Restrict access to JavaScript
+        });
 
         Cookies.set("username", username, { expires: 1 / (24 * 60) });
         setUser(token);

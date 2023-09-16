@@ -5,7 +5,6 @@ const app = express();
 import { connectToDatabase } from "./config/db.js";
 import { router } from "./routes/blogRoutes.js";
 import cookieParser from "cookie-parser";
-import helmet from "helmet";
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -14,7 +13,6 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.use(express.json());
-app.use(helmet());
 
 connectToDatabase();
 
