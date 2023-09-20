@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import EditBlogPost from "./components/EditPost/EditBlogPost";
 import Navbar from "./components/Navbar/Navbar";
@@ -9,25 +9,59 @@ import PageNotFound from "./pages/PageNotFound/PageNotFound";
 import SignUp from "./pages/SignUp/SignUp";
 import Create from "./pages/createBlog/Create";
 import { Route, Routes, Navigate } from "react-router-dom";
+import { newTokenRefresher } from "./tokenRefresher";
+import Cookies from "js-cookie";
+import MyBlog from "./pages/MyBlog/MyBlog";
 
 function App() {
-  const { user } = useUserContext();
+  const { user, setUser, refreshToken, setRefreshToken } = useUserContext();
+  console.log({ user, refreshToken });
+
+  const OnStart = async () => {
+    await newTokenRefresher();
+
+    const accessToken = Cookies.get("authToken");
+    const RefreshToken = Cookies.get("refreshToken");
+
+    if (!accessToken) {
+      console.error("Access token not found. Please log in.");
+      return;
+    }
+
+    setUser(accessToken);
+    setRefreshToken(RefreshToken);
+  };
+
+  useEffect(() => {
+    OnStart();
+  }, []);
 
   return (
     <div className="App">
       <Navbar />
       <Routes>
-        <Route path="/" element={<AllBlogs />} />
+        <Route
+          path="/"
+          element={
+            refreshToken ? <AllBlogs /> : <Navigate replace to={"/login"} />
+          }
+        />
+        {refreshToken && <Route path="/" element={<Navigate to="/login" />} />}
         {user ? (
           <Route path="/create" element={<Create />} />
         ) : (
           <Route path="/create" element={<Navigate to="/login" />} />
         )}
-        {user ? (
-          <Route path="/edit/:postId" element={<EditBlogPost />} />
-        ) : (
-          <Route path="/create" element={<Navigate to="/login" />} />
-        )}
+
+        <Route
+          path="/edit/:postId"
+          element={user ? <EditBlogPost /> : <Navigate replace to={"/login"} />}
+        />
+
+        <Route
+          path="/myblog"
+          element={user ? <MyBlog /> : <Navigate replace to={"/login"} />}
+        />
 
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />

@@ -14,6 +14,7 @@ export const UserContextProvider = ({ children }) => {
 
   const [user, setUser] = useState(initialUser);
   const [username, setUsername] = useState(initialUsername);
+  const [userId, setUserId] = useState(null);
   const [refreshToken, setRefreshToken] = useState(initialRefreshtoken);
 
   // Function to update user state

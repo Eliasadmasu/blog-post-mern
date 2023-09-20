@@ -5,15 +5,14 @@ import "./editblog.css";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import "../../pages/createBlog/create.css";
-import { useUserContext } from "../../context/UserContext";
+import { newTokenRefresher } from "../../tokenRefresher";
+import Cookies from "js-cookie";
 
 const EditBlogPost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [photo, setPhoto] = useState(null);
   const [newPhoto, setNewPhoto] = useState(null);
-  const { user } = useUserContext();
-
   //states
   const apiUrl = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
@@ -22,10 +21,18 @@ const EditBlogPost = () => {
   useEffect(() => {
     const fetchBlogPost = async () => {
       try {
+        await newTokenRefresher();
+
+        const accessToken = Cookies.get("authToken");
+        if (!accessToken) {
+          console.error("Access token not found. Please log in.", accessToken);
+          return;
+        }
+
         const header = {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${user}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         };
         const response = await axios.get(
@@ -64,13 +71,21 @@ const EditBlogPost = () => {
     }
 
     try {
+      await newTokenRefresher();
+
+      const accessToken = Cookies.get("authToken");
+      if (!accessToken) {
+        console.error("Access token not found. Please log in.", accessToken);
+        return;
+      }
+
       const response = await axios.put(
         `${apiUrl}/blog/update/${postId}`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${user}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );

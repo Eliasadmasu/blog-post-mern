@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./login.css";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useUserContext } from "../../context/UserContext";
@@ -16,8 +15,6 @@ const Login = () => {
   // Usercontext
   const { setUser, setUsername, setRefreshToken } = useUserContext();
   // Usercontext
-
-  const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,17 +37,15 @@ const Login = () => {
         setRefreshToken(refreshToken);
         console.log({ refreshToken });
         Cookies.set("authToken", token, {
-          expires: 1 / (24 * 60), // Expiration time in days
+          expires: 20 / 1440, // Expiration time in days
           secure: true, // Enable this for HTTPS
-          httpOnly: true, // Restrict access to JavaScript
         });
         Cookies.set("refreshToken", refreshToken, {
-          expires: 1, // Expiration time in days
+          expires: 1 / 24, // Expiration time in days
           secure: true, // Enable this for HTTPS
-          httpOnly: true, // Restrict access to JavaScript
         });
 
-        Cookies.set("username", username, { expires: 1 / (24 * 60) });
+        Cookies.set("username", username, { expires: 20 / 1440 });
         setUser(token);
         setUsername(username);
       }

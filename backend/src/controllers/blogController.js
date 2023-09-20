@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import BlogPostModel from "../models/blogModel.js";
-import { error } from "console";
+import { error, log } from "console";
 
 const createBlog = async (req, res) => {
   try {
@@ -12,12 +12,13 @@ const createBlog = async (req, res) => {
     // const photoPath = req.file ? req.file.path : "";
     const photoPath = req.file ? req.file.filename : "";
 
+    const userId = req.userId;
     // Create a new blog post with the photo path
     const newBlogPost = new BlogPostModel({
       title,
       content,
       photo: photoPath,
-      user: req.userId,
+      user: userId,
     });
 
     await newBlogPost.save();
@@ -25,17 +26,6 @@ const createBlog = async (req, res) => {
     res.status(201).json({ title, content, photoPath });
   } catch (error) {
     console.error("Error creating and saving the blog post:", error);
-
-    // Handle different types of errors
-    if (error.name === "ValidationError") {
-      // Mongoose validation error (e.g., required fields not provided)
-      return res
-        .status(400)
-        .json({ error: "Validation error", details: error.errors });
-    } else {
-      // Generic server error
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
   }
 };
 
@@ -108,7 +98,49 @@ const getBlogPostById = async (req, res) => {
   }
 };
 
-const granted = (req, res) => {
-  res.json({ message: "Access granted", user: req.user });
+const deleteBlog = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const blogPost = await BlogPostModel.findById(id);
+
+    if (!blogPost) {
+      return res.status(404).json({ error: "Blog post not found" });
+    }
+
+    if (blogPost.user.toString() !== req.userId) {
+      return res
+        .status(403)
+        .json({ error: "You do not have permission to delete this post" });
+    }
+
+    // Delete the blog post
+
+    await BlogPostModel.findByIdAndRemove(id);
+
+    res.status(200).json({ message: "Blog post deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting the blog post:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
-export { createBlog, getAllBlog, updatePost, getBlogPostById, granted };
+
+const MyBlogPost = async (req, res) => {
+  const userId = req.userId;
+  try {
+    const userPost = await BlogPostModel.find({ user: userId });
+    res.status(200).json({ userPost });
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ error });
+  }
+};
+
+export {
+  createBlog,
+  getAllBlog,
+  updatePost,
+  getBlogPostById,
+  deleteBlog,
+  MyBlogPost,
+};

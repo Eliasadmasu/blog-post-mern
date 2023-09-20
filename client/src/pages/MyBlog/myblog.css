@@ -1,0 +1,21 @@
+.wholeCont {
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+}
+ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 30px;
+}
+.wholeCont > h2 {
+  color: white;
+  font-size: 35px;
+}
+.fxdr {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}

@@ -4,6 +4,10 @@ import bcrypt from "bcrypt";
 import UserModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../config/token.config.js";
 
 const register = async (req, res) => {
   const { username, password } = req.body;
@@ -42,23 +46,9 @@ const login = async (req, res) => {
         return res.status(401).json({ message: "Invalid credentials" });
       }
       //TODO access token ==token
-      const token = jwt.sign({ userId: user._id }, process.env.SECRET, {
-        expiresIn: "10m",
-      });
+      const token = generateAccessToken(user);
       //TODO refreshtoken generating
-      const refreshToken = jwt.sign(
-        { userId: user._id },
-        process.env.REFRESH_SECRET,
-        {
-          expiresIn: "1d", //!changed time
-        }
-      );
-      //TODO pass the refreshtoken to the cookie
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1 * 24 * 60 * 60 * 1000,
-      });
+      const refreshToken = generateRefreshToken(user);
 
       res.status(200).json({ token, refreshToken, user });
     }
@@ -68,30 +58,27 @@ const login = async (req, res) => {
   }
 };
 
-//! test refresh token
-//! test refresh token
-//! test refresh token
+//? @ route POST /blog/refresh
+//? @ public
 const newRefreshTokenTest = (req, res) => {
-  const cookies = req.cookies;
-  console.log(cookies);
+  const refreshToken = req.body.refreshToken;
 
-  if (!cookies?.refreshToken)
-    return res.status(401).json({ message: "Unauthorized" });
-
-  const refreshToken = cookies.refreshToken;
-  console.log(refreshToken);
+  if (!refreshToken)
+    return res.status(401).json({ message: "Unauthorized refeshToken" });
 
   jwt.verify(refreshToken, process.env.REFRESH_SECRET, async (err, decoded) => {
-    if (err) return res.status(403).json({ message: "Forbidden" });
+    if (err) return res.status(403).json({ message: "Invalid refresh token" });
 
-    const foundUser = await UserModel.findOne({ username: decoded.username });
+    try {
+      const User = await UserModel.findById(decoded.userId).exec();
+      if (!User) return res.status(401).json({ message: "Unauthorized" });
 
-    if (!foundUser) return res.status(401).json({ message: "Unauthorized" });
-
-    const accessToken = jwt.sign({ userId }, process.env.SECRET, {
-      expiresIn: "1m",
-    });
-    res.json({ accessToken, message: "Access token refreshed" });
+      const accessToken = generateAccessToken(User);
+      console.log({ "new accesstoken generated": accessToken });
+      res.json({ accessToken, message: "Access token refreshed", User });
+    } catch (error) {
+      console.error(error);
+    }
   });
 };
 

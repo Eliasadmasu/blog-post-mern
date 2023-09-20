@@ -4,6 +4,8 @@ import {
   getAllBlog,
   getBlogPostById,
   updatePost,
+  deleteBlog,
+  MyBlogPost,
 } from "../controllers/blogController.js";
 import upload from "../middleware/multerConfig.js";
 import {
@@ -24,13 +26,21 @@ router.post("/create", upload.single("photo"), verifyToken, createBlog);
 
 router.get("/all", getAllBlog);
 
-router.put("/update/:id", upload.single("photo"), verifyToken, updatePost);
-
+//get post by id
 router.get("/get/:id", verifyToken, getBlogPostById);
 
-//!test
-//!test
-//!test
+//update post
+router.put("/update/:id", upload.single("photo"), verifyToken, updatePost);
+
+//update post
+router.delete("/delete/:id", verifyToken, deleteBlog);
+
+//my own blog posts
+router.get("/mypost", verifyToken, MyBlogPost);
+
+//my own blog posts
+
+//refresh token route
 router.post("/refresh", newRefreshTokenTest);
 
 export { router };
