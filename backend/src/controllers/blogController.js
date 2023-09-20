@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import BlogPostModel from "../models/blogModel.js";
 import { error, log } from "console";
+import Comment from "../models/commentModel.js";
 
 const createBlog = async (req, res) => {
   try {
@@ -172,6 +173,44 @@ const savedPostList = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+//?@Get /blog/comment
+//?@public
+const comments = async (req, res) => {
+  const { text, blogPostId } = req.body;
+  const userId = req.userId;
+  try {
+    const newComment = new Comment({
+      text,
+      user: userId,
+      blogPost: blogPostId,
+    });
+
+    console.log({ newComment });
+    await newComment.save();
+
+    res.status(201).json(newComment);
+  } catch (error) {
+    console.error("Error creating comment:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const commmentList = async (req, res) => {
+  const blogPostId = req.params.blogPostId;
+  console.log({ blogPostId });
+  try {
+    const comments = await Comment.find({ blogPost: blogPostId }).populate(
+      "user"
+    );
+    console.log(comments);
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error("Error retrieving comments:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export {
   createBlog,
   getAllBlog,
@@ -181,4 +220,6 @@ export {
   MyBlogPost,
   savePost,
   savedPostList,
+  comments,
+  commmentList,
 };

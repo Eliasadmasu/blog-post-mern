@@ -1,8 +1,28 @@
+.userMain {
+  display: flex;
+}
+
+.userData {
+  position: absolute;
+  padding: 10px;
+  top: 110px;
+  left: 20px;
+  border-radius: 14px;
+  transition: all 0.2s ease;
+  border: 1px solid;
+}
+.userData:hover {
+  border-radius: 0px;
+  background: black;
+  transition: all 0.2s ease;
+}
 .wholeCont {
   width: 100%;
   height: auto;
   min-height: 100vh;
+  gap: 0;
 }
+
 ul {
   display: flex;
   justify-content: center;
@@ -13,6 +33,10 @@ ul {
 .wholeCont > h2 {
   color: white;
   font-size: 35px;
+  height: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .fxdr {
   width: 100%;

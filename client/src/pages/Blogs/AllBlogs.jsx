@@ -1,13 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "./allblog.css";
-// import { FaRegEdit } from "react-icons/fa";
 import { newTokenRefresher } from "../../tokenRefresher";
 import Cookies from "js-cookie";
 import { ImSearch } from "react-icons/im";
 import { ThreeDots } from "react-loader-spinner";
 import { useUserContext } from "../../context/UserContext";
 import SavePost from "../../components/Save/SavePost";
+import CommentForm from "../../components/CommentForm/CommentForm";
+import CommentList from "../../components/CommentList/CommentList";
 
 const AllBlogs = () => {
   const [data, setData] = useState([]);
@@ -94,6 +95,8 @@ const AllBlogs = () => {
               </div>
               <SavePost postId={item._id} />
             </div>
+            <CommentForm blogPostId={item._id} />
+            <CommentList blogPostId={item._id} />
           </div>
         ))
       ) : (

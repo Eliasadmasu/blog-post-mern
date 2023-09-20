@@ -50,6 +50,7 @@ const SavedPostList = () => {
   };
   return (
     <div>
+      <h2 style={{ textAlign: "center", color: "white" }}>Saved Postes</h2>
       {!loading ? (
         <div className="formCont">
           {savedPosts.map((post) => (

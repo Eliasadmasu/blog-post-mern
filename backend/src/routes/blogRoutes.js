@@ -8,6 +8,8 @@ import {
   MyBlogPost,
   savePost,
   savedPostList,
+  comments,
+  commmentList,
 } from "../controllers/blogController.js";
 import upload from "../middleware/multerConfig.js";
 import {
@@ -45,6 +47,12 @@ router.post("/save/:postId", verifyToken, savePost);
 
 //save Get
 router.get("/savedList", verifyToken, savedPostList);
+
+//Commments
+router.post("/comments", verifyToken, comments);
+
+//Commments List
+router.get("/comments/:blogPostId", verifyToken, commmentList);
 
 //refresh token route
 router.post("/refresh", newRefreshTokenTest);

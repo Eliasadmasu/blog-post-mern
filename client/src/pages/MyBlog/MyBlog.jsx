@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { PiTagFill } from "react-icons/pi";
 import DeletePost from "../../components/DeletePost/DeletePost";
 import { ThreeDots } from "react-loader-spinner";
 import "./myblog.css";
@@ -52,56 +53,72 @@ const MyBlog = () => {
   };
 
   return (
-    <div className="wholeCont">
-      {/* {user && ( */}
-      <Link to={"/create"} className="createPst">
-        <button class="Btn1">
-          <div class="sign">+</div>
-          <div class="text"> Create</div>
-        </button>
-      </Link>
-      {loading ? (
-        <div className="loading">
-          <ThreeDots
-            height="80"
-            width="80"
-            radius="9"
-            color="#13a1c5"
-            ariaLabel="three-dots-loading"
-            wrapperStyle={{}}
-            wrapperClassName=""
-            visible={true}
-          />
-        </div>
-      ) : userPosts.length === 0 ? (
-        <p>No blog posts found.</p>
-      ) : (
-        <ul>
-          {userPosts.map((post) => (
-            <li key={post._id} className="singleCont">
-              <h3>{post.title}</h3>
-              {post.photo && (
-                <img
-                  className="blogImg"
-                  src={`${apiUrl}/uploads/${post.photo}`}
-                  alt={`${post.title}`}
-                />
-              )}
+    <div className="userMain">
+      <div className="userData">
+        <Link
+          to={"/savedList"}
+          style={{
+            display: "flex",
+            gap: "4px",
+            color: "white",
+            width: "120px",
+          }}
+        >
+          <PiTagFill className="saveBtn" />
+          Saved Post
+        </Link>
+      </div>
+      <div className="wholeCont">
+        <h2>My Blog post</h2>
+        <Link to={"/create"} className="createPst">
+          <button class="Btn1">
+            <div class="sign">+</div>
+            <div class="text"> Create</div>
+          </button>
+        </Link>
+        {loading ? (
+          <div className="loading">
+            <ThreeDots
+              height="80"
+              width="80"
+              radius="9"
+              color="#13a1c5"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            />
+          </div>
+        ) : userPosts.length === 0 ? (
+          <p>No blog posts found.</p>
+        ) : (
+          <ul>
+            {userPosts.map((post) => (
+              <li key={post._id} className="singleCont">
+                <h3>{post.title}</h3>
+                {post.photo && (
+                  <img
+                    className="blogImg"
+                    src={`${apiUrl}/uploads/${post.photo}`}
+                    alt={`${post.title}`}
+                  />
+                )}
 
-              <p dangerouslySetInnerHTML={renderHTML(post.content)} />
-              <div className="fxdr">
-                <Link to={`/edit/${post._id}`}>
-                  <FaRegEdit size={20} />
-                </Link>
-                <DeletePost
-                  blogId={post._id}
-                  onDeleteSuccess={handleDeleteSuccess}
-                />
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+                <p dangerouslySetInnerHTML={renderHTML(post.content)} />
+                <div className="fxdr">
+                  <Link to={`/edit/${post._id}`}>
+                    <FaRegEdit size={20} />
+                  </Link>
+                  <DeletePost
+                    blogId={post._id}
+                    onDeleteSuccess={handleDeleteSuccess}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
