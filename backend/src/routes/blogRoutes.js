@@ -6,6 +6,8 @@ import {
   updatePost,
   deleteBlog,
   MyBlogPost,
+  savePost,
+  savedPostList,
 } from "../controllers/blogController.js";
 import upload from "../middleware/multerConfig.js";
 import {
@@ -38,7 +40,11 @@ router.delete("/delete/:id", verifyToken, deleteBlog);
 //my own blog posts
 router.get("/mypost", verifyToken, MyBlogPost);
 
-//my own blog posts
+//save post
+router.post("/save/:postId", verifyToken, savePost);
+
+//save Get
+router.get("/savedList", verifyToken, savedPostList);
 
 //refresh token route
 router.post("/refresh", newRefreshTokenTest);

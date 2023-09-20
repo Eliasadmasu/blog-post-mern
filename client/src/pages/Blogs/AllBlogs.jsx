@@ -2,13 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import "./allblog.css";
 // import { FaRegEdit } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import { newTokenRefresher } from "../../tokenRefresher";
 import Cookies from "js-cookie";
 import { ImSearch } from "react-icons/im";
-// import DeletePost from "../../components/DeletePost/DeletePost";
 import { ThreeDots } from "react-loader-spinner";
 import { useUserContext } from "../../context/UserContext";
+import SavePost from "../../components/Save/SavePost";
 
 const AllBlogs = () => {
   const [data, setData] = useState([]);
@@ -18,13 +17,6 @@ const AllBlogs = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const apiUrl = process.env.REACT_APP_API_URL;
-
-  // const handleDeleteSuccess = (deletedBlogId) => {
-  //   // Remove the deleted blog post from the data array
-  //   setData((prevData) =>
-  //     prevData.filter((item) => item._id !== deletedBlogId)
-  //   );
-  // };
 
   useEffect(() => {
     const FetchedData = async () => {
@@ -69,11 +61,6 @@ const AllBlogs = () => {
 
   return (
     <div className="wholeCont">
-      {/* {user && (
-        <Link to={"/create"} className="createPst">
-          Create Post
-        </Link>
-      )} */}
       <div className="searchCont">
         <input
           type="text"
@@ -105,13 +92,7 @@ const AllBlogs = () => {
               <div className="blogCreatedDate">
                 Posted: {formatDate(item.date)}
               </div>
-              {/* <Link to={`/edit/${item._id}`}>
-                <FaRegEdit size={20} />
-              </Link>
-              <DeletePost
-                blogId={item._id}
-                onDeleteSuccess={handleDeleteSuccess}
-              /> */}
+              <SavePost postId={item._id} />
             </div>
           </div>
         ))

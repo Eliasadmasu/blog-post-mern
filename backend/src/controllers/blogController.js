@@ -136,6 +136,42 @@ const MyBlogPost = async (req, res) => {
   }
 };
 
+const savePost = async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.userId;
+
+  try {
+    const post = await BlogPostModel.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "Blog post not found" });
+    }
+
+    if (post.savedByUsers.includes(userId)) {
+      return res.status(400).json({ error: "Post is already saved" });
+    }
+
+    post.savedByUsers.push(userId);
+    await post.save();
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Error saving post:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const savedPostList = async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const savedPost = await BlogPostModel.find({ savedByUsers: userId });
+    res.status(200).json(savedPost);
+  } catch (error) {
+    console.error("Error retrieving saved posts:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 export {
   createBlog,
   getAllBlog,
@@ -143,4 +179,6 @@ export {
   getBlogPostById,
   deleteBlog,
   MyBlogPost,
+  savePost,
+  savedPostList,
 };

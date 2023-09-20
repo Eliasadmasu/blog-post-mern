@@ -21,6 +21,7 @@ const blogPost = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  savedByUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 const BlogPostModel = mongoose.model("Post", blogPost);

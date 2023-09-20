@@ -12,6 +12,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { newTokenRefresher } from "./tokenRefresher";
 import Cookies from "js-cookie";
 import MyBlog from "./pages/MyBlog/MyBlog";
+import SavedPostList from "./pages/SavedPostList/SavedPostList";
 
 function App() {
   const { user, setUser, refreshToken, setRefreshToken } = useUserContext();
@@ -61,6 +62,12 @@ function App() {
         <Route
           path="/myblog"
           element={user ? <MyBlog /> : <Navigate replace to={"/login"} />}
+        />
+        <Route
+          path="/savedList"
+          element={
+            user ? <SavedPostList /> : <Navigate replace to={"/login"} />
+          }
         />
 
         <Route path="/signup" element={<SignUp />} />

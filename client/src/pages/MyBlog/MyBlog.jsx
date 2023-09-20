@@ -53,12 +53,13 @@ const MyBlog = () => {
 
   return (
     <div className="wholeCont">
-      <h2>My Blog Posts</h2>
       {/* {user && ( */}
       <Link to={"/create"} className="createPst">
-        Create Post
+        <button class="Btn1">
+          <div class="sign">+</div>
+          <div class="text"> Create</div>
+        </button>
       </Link>
-      {/* )} */}
       {loading ? (
         <div className="loading">
           <ThreeDots
